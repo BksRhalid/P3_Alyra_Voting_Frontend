@@ -19,7 +19,6 @@ import WinnerHeadline from './components/WinnerHeadline';
 
 
 const Proposals = () => {
-  console.log(contractAddress)
   const { address, isConnected } = useAccount();
   const provider = useProvider();
   const { data: signer } = useSigner();
