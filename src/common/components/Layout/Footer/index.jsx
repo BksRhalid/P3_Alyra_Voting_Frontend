@@ -3,7 +3,6 @@ import { withTheme } from '@emotion/react'
 import { useEffect } from 'react'
 
 export default function Footer() {
-    let date = 0
 
     useEffect(() => {
         const date = new Date().getFullYear()
@@ -14,7 +13,7 @@ export default function Footer() {
         minH="5vh"
           bgGradient="linear(to-l, #00635D, #4FD1C5)">
             <div>
-                <Text color="white">@Alyra Decentralized Organization {date} </Text>
+                <Text color="white">@Alyra Decentralized Organization {new Date().getFullYear()}</Text>
             </div>
         </Flex>
     )

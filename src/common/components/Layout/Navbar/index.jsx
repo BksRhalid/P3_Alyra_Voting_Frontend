@@ -28,7 +28,7 @@ const Navbar = () => {
   const { onOpen } = useDisclosure();
 
   return (
-    <Container maxW="7xl" pt={{ base: 5, md: 10 }}>
+    <Container maxW="90vW" pt={{ base: 5, md: 10 }}>
       <Flex mb="30px" align="center">
         <HStack>
           <Link href="/">
@@ -37,15 +37,15 @@ const Navbar = () => {
                 <Heading
                   as="h1"
                   fontSize={{ base: 'xl', sm: 'l' }}
-                  bgGradient="linear(to-l,#00635D,#4FD1C5)"
+                  bgGradient="linear(to-l,#4FD1C5,#00635D)"
                   bgClip="text"
                   _focus={{ boxShadow: 'none', outline: 'none' }}
                   _hover={{
                     textDecoration: 'none',
-                    bgGradient:'linear(to-l, #4FD1C5,#00635D )'
+                    bgGradient:'linear(to-l, #00635D,#4FD1C5 )'
                   }}
                 >
-                  DAO
+                  Alyra Decentralized Organization
                 </Heading>
               </motion.div>
             </Box>

@@ -1,17 +1,21 @@
 import React from 'react'
-import { Icon,Flex, Text, Button, useToast, Spinner, TableContainer, Table, Thead, Tr, Td, Th, Tbody, Container, SimpleGrid,  Alert, AlertIcon, Link, Input, Box, Progress, HStack, VStack, Stack, StackDivider,   FormLabel,
-  FormControl, Textarea, FormHelperText, FormErrorMessage, color, BeatLoader} from "@chakra-ui/react";
+import { Icon,Flex, Text, Button, useToast, Spinner, TableContainer, Table, Thead, Tr, Td, Th, Tbody, Container, SimpleGrid,  Alert, AlertIcon, Link, Input, Box, Progress, HStack, VStack, Stack, StackDivider, FormLabel,
+  FormControl, Textarea, FormHelperText, FormErrorMessage, color, BeatLoader, Show, Spacer} from "@chakra-ui/react";
 import { abi, contractAddress} from "../../../constants"
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { useProvider, useAccount, useSigner } from 'wagmi';
-import {MainPanel, PanelContainer, PanelContent} from '../Layout/Panel';
-import Sidebar from '../Layout/Sidebar';
 import { MdAdd } from "react-icons/md";
 import { FaPencilAlt, FaVoteYea } from "react-icons/fa";
-import { AiOutlineUserAdd, AiOutlineCalculator} from "react-icons/ai";
+import { AiOutlineUserAdd, AiOutlineCalculator, AiFillTrophy} from "react-icons/ai";
 import {BiMessageAltEdit, BiMessageAltX} from "react-icons/bi";
 import {BsFillCalendarXFill} from "react-icons/bs";
+import ErrorHeadline from './components/ErrorHeadline';
+import InfoHeadline from './components/InfoHeadline';
+import SuccessHeadline from './components/SuccessHeadline';
+import WarningHeadline from './components/WarningHeadline';
+import WinnerHeadline from './components/WinnerHeadline';
+
 
 
 const Proposals = () => {
@@ -25,7 +29,7 @@ const Proposals = () => {
   const [workflow, setWorkflow] = useState("")
   const [proposalsLength, setProposalsLength] = useState(0);
   const [input, setInput] = useState("");
-  const [Voter, setVoter] = useState(false);
+  const [isVoter, setIsVoter] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isActive, setIsActive] = useState(false);
   const [color, setColor] = useState("");
@@ -56,11 +60,10 @@ const Proposals = () => {
         //   isClosable: true,
         // })
         setStep(to)
-        return () => {
-          contract.removeAllListeners();
-        };
       })
-
+      return () => {
+        contract.removeAllListeners();
+      };
     }
     catch (e){
       toast({
@@ -71,36 +74,7 @@ const Proposals = () => {
         isClosable: true,
       })
     }  
-  // try {
-  //   const contract = new ethers.Contract(contractAddress, abi, provider)
-  //   contract.on('ProposalRegistered', (proposalId, event) => {
-  //   // console.log(proposalId, event)
-  //   let length = proposalId + 1
-  //   setProposalsLength(length)
-  //   // getProposals()
-  //   toast({
-  //     title: `${event.event}`,
-  //     description: `Proposal ${proposalId} registered`,
-  //     status: 'success',
-  //     duration: 5000,
-  //     isClosable: true,
-  //   })
-  //   return () => {
-  //     contract.removeAllListeners();
-  //   };
-  // })
-  // }
-  // catch (e){
-  //   toast({
-  //     title: 'Error',
-  //     description: e.message , //An error occured, please try again.
-  //     status: 'error',
-  //     duration: 5000,
-  //     isClosable: true,
-  //   })
-  //   } 
-      
-  }, [isConnected, address])
+  }, [])
 
   useEffect(() => {
     registerProposal()
@@ -216,36 +190,13 @@ const Proposals = () => {
     let step = await contract.workflowStatus()
     setStep(step)
     updateStatus(step)
-    registerProposal()
-    // getProposals()
-    try {
-      const contract = new ethers.Contract(contractAddress, abi, provider) 
-      let isVoter = await contract.getVoter(address)
-      // console.log("Address isVoter :", isVoter)
-      setVoter(isVoter)
-    }
-    catch (e){
-      // console.log(e.reason)
-      if (e.reason === "You're not a voter") {
-        setVoter(false)
-      }
-      else {
-        toast({
-          title: 'Error',
-          description: "An error occured, please try again.",
-          status: 'error',
-          duration: 5000,
-          isClosable: true,
-        })
-      }
-    }
-    // console.log("Voter is :", Voter)
+    // registerProposal()
 }
 
   useEffect(() => {
     getDatas()
-    registerProposal()
-  }, [isConnected, address])
+    getVoter()
+  }, [isConnected, address, isVoter, step])
 
   const startProposalsRegistering = async() => {
     try {
@@ -261,12 +212,22 @@ const Proposals = () => {
           isClosable: true,
         })
       }
-catch (e){
+catch (e){ 
   const data = e.reason.split("'")
   if (data[1] === "Registering proposals cant be started now") {
       toast({
         title: 'Error',
         description: "Registering proposals cant be started now",
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      })
+    }
+    else if (data[1] === "Ownable: caller is not the owner")
+    {
+      toast({
+        title: 'Error',
+        description: "Only the owner can start the proposals registering",
         status: 'error',
         duration: 5000,
         isClosable: true,
@@ -303,6 +264,16 @@ catch (e){
           toast({
             title: 'Error',
             description: "Registering proposals havent started yet",
+            status: 'error',
+            duration: 5000,
+            isClosable: true,
+          })
+        }
+        else if (data[1] === "Ownable: caller is not the owner")
+        {
+          toast({
+            title: 'Error',
+            description: "Only the owner can end the proposals registering",
             status: 'error',
             duration: 5000,
             isClosable: true,
@@ -347,6 +318,16 @@ catch (e){
             isClosable: true,
           })
         }
+        else if (data[1] === "Ownable: caller is not the owner")
+        {
+          toast({
+            title: 'Error',
+            description: "Only the owner can start the voting session",
+            status: 'error',
+            duration: 5000,
+            isClosable: true,
+          })
+        }
         else {
           toast({
             title: 'Error',
@@ -375,11 +356,21 @@ catch (e){
       })
     }
     catch (e){
-      const data = e.reason.split("'")
+        const data = e.reason.split("'")
       if (data[1] === "Registering proposals phase is not finished") {
           toast({
             title: 'Error',
             description: "Registering proposals phase is not finished",
+            status: 'error',
+            duration: 5000,
+            isClosable: true,
+          })
+        }
+        else if (data[1] === "Ownable: caller is not the owner")
+        {
+          toast({
+            title: 'Error',
+            description: "Only the owner can end the voting session",
             status: 'error',
             duration: 5000,
             isClosable: true,
@@ -400,40 +391,61 @@ catch (e){
   const tallyVotes = async() => {    
     try {
       const contract = new ethers.Contract(contractAddress, abi, signer) 
-    let transaction = await contract.tallyVotes()
-    await transaction.wait(1)
-    getDatas()
-    getWinner()
-    console.log("Winner :", winningProposalID)
-      toast({
-        title: 'Congratulations!',
-        description: "Votes are now tallied !",
-        status: 'success',
-        duration: 5000,
-        isClosable: true,
-      })
-    }
+      let transaction = await contract.tallyVotes()
+      await transaction.wait(1)
+      getDatas()
+      getProposalWinner()
+      console.log("Winner :", winningProposalID)
+        toast({
+          title: 'Congratulations!',
+          description: "Votes are now tallied !",
+          status: 'success',
+          duration: 5000,
+          isClosable: true,
+        })
+      }
     catch (e){
-      const data = e.reason.split("'")
-      if (data[1] === "Current status is not voting session ended") {
-          toast({
-            title: 'Error',
-            description: "Current status is not voting session ended",
-            status: 'error',
-            duration: 5000,
-            isClosable: true,
-          })
-        }
-        else {
-          toast({
-            title: 'Error',
-            description: "An error occured, please try again.",
-            status: 'error',
-            duration: 5000,
-            isClosable: true,
-          })
-    }
-    }
+      try {
+        const data = e.reason.split("'")
+        if (data[1] === "Current status is not voting session ended") {
+            toast({
+              title: 'Error',
+              description: "Current status is not voting session ended",
+              status: 'error',
+              duration: 5000,
+              isClosable: true,
+            })
+          }
+          else if (data[1] === "Ownable: caller is not the owner")
+          {
+            toast({
+              title: 'Error',
+              description: "Only the owner can tally the votes",
+              status: 'error',
+              duration: 5000,
+              isClosable: true,
+            })
+          }
+          else {
+            toast({
+              title: 'Error',
+              description: "An error occured, please try again.",
+              status: 'error',
+              duration: 5000,
+              isClosable: true,
+            })
+      }
+      }
+      catch (e) {
+        toast({
+          title: 'Error',
+          description: "An error occured, please try again.",
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        })
+      }
+      }
   }
 
   const getProposalWinner = async() => {
@@ -456,33 +468,28 @@ catch (e){
     }
   }
 
-
-
   const getVoter = async() => {
     try {
-      const contract = new ethers.Contract(contractAddress, abi, signer)
-      let voter = await contract.getVoter(address)
-      console.log(voter)
-      getDatas()
-      toast({
-        title: 'Congratulations!',
-        description: "You add a new Voter!",
-        status: 'success',
-        duration: 5000,
-        isClosable: true,
-      })
+      const contract = new ethers.Contract(contractAddress, abi, provider) 
+      let Voter = await contract.connect(address).getVoter(address)
+      // console.log("Address isVoter :", isVoter)
+      setIsVoter(Voter)
     }
-    catch (error) {
-      console.log(error.message)
-      toast({
-        title: 'Error',
-        description: "An error occured, please try again.",
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      })
-    }
-  }
+    catch (e){
+      console.log(e.reason)
+      if (e.reason == "You're not a voter") {
+        setIsVoter(false)
+      }
+      else {
+        toast({
+          title: 'Error',
+          description: "An error occured, please try again.",
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        })
+      }
+}}
 
   const getOneProposal = async(id) => {
     try {
@@ -501,29 +508,99 @@ catch (e){
         let transaction = await contract.addVoter(input)
         await transaction.wait(1)
         getDatas()
+        getVoter()
         toast({
           title: 'Congratulations!',
           description: "You add a new Voter!",
           status: 'success',
-          duration: 5000,
+          duration: 3000,
           isClosable: true,
         })
       }
       catch (e){
+        try {
+          const data = e.reason.split("'")
+          if (data[1] === "Voters registration is not open yet") {
+              toast({
+                title: 'Error',
+                description: "Voters registration is not open yet",
+                status: 'error',
+                duration: 2000,
+                isClosable: true,
+              })
+            }
+          else if (data[1] === "Already registered") {
+              toast({
+                title: 'Error',
+                description: "Voter is already registered",
+                status: 'error',
+                duration: 2000,
+                isClosable: true,
+              })
+            }
+            else {
+              toast({
+                title: 'Error',
+                description: "An error occured, please try again.",
+                status: 'error',
+                duration: 2000,
+                isClosable: true,
+              })
+        }
+        }
+        catch (e) {
+          console.log(e)
+          toast({
+            title: 'Error',
+            description: "An error occured, please try again.",
+            status: 'error',
+            duration: 2000,
+            isClosable: true,
+          })
+  }
+}}
+
+  const addProposal = async() => {
+    try {
+      const contract = new ethers.Contract(contractAddress, abi, signer)
+      let transaction = await contract.addProposal(input)
+      await transaction.wait(1)
+      getDatas()
+      registerProposal()
+      toast({
+        title: 'Congratulations!',
+        description: "You add a new Proposal!",
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      })
+    }
+    catch (e){
+      try {
         const data = e.reason.split("'")
-        if (data[1] === "Voters registration is not open yet") {
+        // console.log(data)
+        if (data[1] === "Proposals are not allowed yet") {
             toast({
               title: 'Error',
-              description: "Voters registration is not open yet",
+              description: "Proposals are not allowed yet",
               status: 'error',
               duration: 5000,
               isClosable: true,
             })
           }
-        else if (data[1] === "Already registered") {
+        else if (data[1] === "Vous ne pouvez pas ne rien proposer") {
             toast({
               title: 'Error',
-              description: "Voter is already registered",
+              description: "Vous ne pouvez pas ne rien proposer",
+              status: 'error',
+              duration: 5000,
+              isClosable: true,
+            })
+          }
+          else if (data[1] === "La session a atteint son nombre maximum de 12 propositions") {
+            toast({
+              title: 'Error',
+              description: "La session a atteint son nombre maximum de 12 propositions",
               status: 'error',
               duration: 5000,
               isClosable: true,
@@ -538,45 +615,9 @@ catch (e){
               isClosable: true,
             })
       }
-  }
-}
-
-  const addProposal = async() => {
-    try {
-      const contract = new ethers.Contract(contractAddress, abi, signer)
-      let transaction = await contract.addProposal(input)
-      await transaction.wait(1)
-      getDatas()
-      toast({
-        title: 'Congratulations!',
-        description: "You add a new Proposal!",
-        status: 'success',
-        duration: 5000,
-        isClosable: true,
-      })
-    }
-    catch (e){
-      const data = e.reason.split("'")
-      // console.log(data)
-      if (data[1] === "Proposals are not allowed yet") {
-          toast({
-            title: 'Error',
-            description: "Proposals are not allowed yet",
-            status: 'error',
-            duration: 5000,
-            isClosable: true,
-          })
-        }
-      else if (data[1] === "Vous ne pouvez pas ne rien proposer") {
-          toast({
-            title: 'Error',
-            description: "Vous ne pouvez pas ne rien proposer",
-            status: 'error',
-            duration: 5000,
-            isClosable: true,
-          })
-        }
-        else {
+      }
+      catch (e) {
+        {
           toast({
             title: 'Error',
             description: "An error occured, please try again.",
@@ -584,8 +625,9 @@ catch (e){
             duration: 5000,
             isClosable: true,
           })
-    }
-}}
+      }}
+  }}
+
 
   const setVote = async(id) => {
    
@@ -646,12 +688,13 @@ catch (e){
   }
 
   return (
-    <Flex direction="row"   minW="90vw" minH="90vh" bg="gray.500" justifyContent="space-between" alignItems="center">
-      <VStack minW="30vw" minH="90vh" justifyContent="initial"  alignItems="center" bg="black" p={{base:"5px", xl:"20px"}}>
-          <Text color="white" fontSize="2xl" fontWeight="bold">
-            Workflow : {progression}%
-            { winnerPropal !== "" && <Text color="white" fontSize="2xl" fontWeight="bold"> Winning Proposal : {winnerPropal} </Text>}
+    <Flex direction="row"   minW="90vw" minH="90vh" bg="gray.200" justifyContent="space-between" alignItems="center">
+      <VStack minW="25vw" minH="90vh" justifyContent="initial"  alignItems="center" bg="gray.200" p={{base:"5px", xl:"20px"}} rounded="md">
+        <Show above='md'>
+          <Text color="gray.800" fontSize="2xl" fontWeight="semibold" pb="20px">
+            Workflow progression : {progression}%
           </Text>
+          </Show>
           <Flex
       flex="1"
       direction="column"
@@ -660,122 +703,179 @@ catch (e){
       alignItems="center"
     >  
 
-    <VStack spacing="24px">
-      <Button isActive={step===0}  leftIcon={<AiOutlineUserAdd  />} rounded="md" minW={{base: "50px",}} minH={{base: "50px",}}  p={{base:"5px", xl:"40px"}}  bgGradient={"linear(to-l, #00635D, #4FD1C5)"} _hover={{bgGradient: "linear(to-r, green.400, green.800)",}} >
-        <Text fontSize="2xs" fontWeight="medium"> Registration session set-up </Text>  
-      </Button> 
-      <Button isActive={step===1}  leftIcon={<BiMessageAltEdit />}  isLoading={isLoading} loadingText='Submitting' rounded="md" minW={{base: "50px",}} minH={{base: "50px",}} p={{base:"5px", xl:"40px"}}  onClick={() => startProposalsRegistering()} bgGradient={"linear(to-l, #00635D, #4FD1C5)"} _hover={{bgGradient: "linear(to-r, green.400, green.800)",}} >
-        <Text fontSize="2xs" fontWeight="medium"> Start proposal session</Text>  
-      </Button> 
-      <Button isActive={step===2} leftIcon={<BiMessageAltX  />}  rounded="md" minw={{base: "50px",}} minh={{base: "50px",}} p={{base:"5px", xl:"40px"}}  onClick={() => endProposalsRegistering()} bgGradient={"linear(to-l, #00635D, #4FD1C5)"} _hover={{bgGradient: "linear(to-r, green.400, green.800)",}} >
-        <Text fontSize="2xs" fontWeight="medium"> End proposal session </Text>  
-      </Button> 
-      <Button isActive={step===3} leftIcon={<FaVoteYea />}  rounded="md" minw={{base: "50px",}} minh={{base: "50px",}} p={{base:"5px", xl:"40px"}}  onClick={() => startVotingSession()} bgGradient={"linear(to-l, #00635D, #4FD1C5)"} _hover={{bgGradient: "linear(to-r, green.400, green.800)",}} >
-        <Text fontSize="2xs" fontWeight="medium"> Start Voting session  </Text>  
-      </Button> 
-      <Button isActive={step===4} leftIcon={<BsFillCalendarXFill  />}  rounded="md" minw={{base: "50px",}} minh={{base: "50px",}} p={{base:"5px", xl:"40px"}}  onClick={() => endVotingSession()} bgGradient={"linear(to-l, #00635D, #4FD1C5)"} _hover={{bgGradient: "linear(to-r, green.400, green.800)",}} >
-        <Text fontSize="2xs" fontWeight="medium"> End Voting session </Text>  
-      </Button> 
-      <Button isActive={step===5} leftIcon={<AiOutlineCalculator  />}  rounded="md" minw={{base: "50px",}} minh={{base: "50px",}} p={{base:"5px", xl:"40px"}}  onClick={() => tallyVotes()} bgGradient={"linear(to-l, #00635D, #4FD1C5)"} _hover={{bgGradient: "linear(to-r, green.400, green.800)",}} >
-        <Text fontSize="2xs" fontWeight="medium"> Display Winning Proposal</Text>  
-      </Button> 
-      <Button isActive={step===5} leftIcon={<AiOutlineCalculator  />}  rounded="md" minw={{base: "50px",}} minh={{base: "50px",}} p={{base:"5px", xl:"40px"}}  onClick={() => getProposalWinner()} bgGradient={"linear(to-l, #00635D, #4FD1C5)"} _hover={{bgGradient: "linear(to-r, green.400, green.800)",}} >
-        <Text fontSize="2xs" fontWeight="medium"> THE winner is : {winnerPropal} </Text>  
-      </Button> 
+      <VStack spacing="24px">
+          <Button isDisabled={step>=0} leftIcon={<AiOutlineUserAdd size={24} />} rounded="md" w={{base: "5vw", xl:"15vw"}} p={{base:"5px", xl:"40px"}}  bgGradient={"linear(to-l, #00635D, #4FD1C5)"} _hover={{bgGradient: "linear(to-r, green.400, green.800)",}} justifyContent="center" alignItems="center">
+          <Show above='lg'>
+            <Text fontSize="xs" fontWeight="medium" ml={2}> Registration session</Text>  
+            </Show>
+          </Button> 
+          <Button isDisabled={step>0}  leftIcon={<BiMessageAltEdit size={24} />}  isLoading={isLoading} loadingText='Submitting' rounded="md" w={{base: "5vw", xl:"15vw"}} p={{base:"5px", xl:"40px"}}  onClick={() => startProposalsRegistering()} bgGradient={"linear(to-l, #00635D, #4FD1C5)"} _hover={{bgGradient: "linear(to-r, green.400, green.800)",}} justifyContent="center" alignItems="center">
+          <Show above='lg'>
+            <Text fontSize="xs" fontWeight="medium" ml={2}> Start proposal session</Text>  
+          </Show>
+          </Button> 
+          <Button isDisabled={step>1} leftIcon={<BiMessageAltX size={24} />}  isLoading={isLoading} loadingText='Submitting'  rounded="md" w={{base: "5vw", xl:"15vw"}}  p={{base:"5px", xl:"40px"}}  onClick={() => endProposalsRegistering()} bgGradient={"linear(to-l, #00635D, #4FD1C5)"} _hover={{bgGradient: "linear(to-r, green.400, green.800)",}} justifyContent="center" alignItems="center">
+          <Show above='lg'>
+            <Text fontSize="xs" fontWeight="medium" ml={2}> End proposal session</Text>  
+          </Show>
+          </Button> 
+          <Button isDisabled={step>2} leftIcon={<FaVoteYea size={24} />}  isLoading={isLoading} loadingText='Submitting'  rounded="md" w={{base: "5vw", xl:"15vw"}}  p={{base:"5px", xl:"40px"}}  onClick={() => startVotingSession()} bgGradient={"linear(to-l, #00635D, #4FD1C5)"} _hover={{bgGradient: "linear(to-r, green.400, green.800)",}} justifyContent="center" alignItems="center">
+          <Show above='lg'>
+          <Text fontSize="xs" fontWeight="medium" ml={2}> Start Voting session </Text>  
+          </Show>
+          </Button> 
+          <Button isDisabled={step>3} leftIcon={<BsFillCalendarXFill  size={24} />}  isLoading={isLoading} loadingText='Submitting'  rounded="md" w={{base: "5vw", xl:"15vw"}}  p={{base:"5px", xl:"40px"}}  onClick={() => endVotingSession()} bgGradient={"linear(to-l, #00635D, #4FD1C5)"} _hover={{bgGradient: "linear(to-r, green.400, green.800)",}} justifyContent="center" alignItems="center">
+          <Show above='lg'>
+            <Text fontSize="xs" fontWeight="medium" ml={2}> End Voting session </Text>  
+          </Show>
+          </Button> 
+          <Button isDisabled={step>4} leftIcon={<AiOutlineCalculator size={24} />} isLoading={isLoading} loadingText='Submitting'  rounded="md" w={{base: "5vw", xl:"15vw"}} p={{base:"5px", xl:"40px"}}  onClick={() => tallyVotes()} bgGradient={"linear(to-l, #00635D, #4FD1C5)"} _hover={{bgGradient: "linear(to-r, green.400, green.800)",}} justifyContent="center" alignItems="center">
+          <Show above='lg'>
+            <Text fontSize="xs" fontWeight="medium" ml={2}> Tally the vote </Text>  
+          </Show>
+          </Button> 
+          <Button isDisabled={winnerPropal !== ""} leftIcon={<AiFillTrophy size={24} />}  isLoading={isLoading} loadingText='Submitting'  rounded="md" w={{base: "5vw", xl:"15vw"}}  p={{base:"5px", xl:"40px"}}  onClick={() => getProposalWinner()} bgGradient={"linear(to-l, #00635D, #4FD1C5)"} _hover={{bgGradient: "linear(to-r, green.400, green.800)",}} justifyContent="center" alignItems="center">
+            <Show above='lg'>
+                <Text fontSize="xs" fontWeight="medium" ml={2}> Reveal wining proposal </Text>  
+            </Show>
+          </Button> 
       </VStack>    
       </Flex>
       </VStack>
-      <Flex direction="column" bg="gray.300" justifyContent="space-between" alignItems="center">
+      <Spacer bg="white" />
+      { winnerPropal !== "" ? (
+          <Stack as="form" p={6} minW="60vw" minH="90vh" justifyContent="center" alignItems="center" bg="gray.200">
+                <WinnerHeadline title={`The winning proposal is : ${winnerPropal}`} description={""}/>
+          </Stack>
+      ) : (
+      <Flex direction="column" bg="gray.200" justifyContent="space-between" alignItems="center" rounded="md">
         {address === owner ? (
-            <Stack as="form" p={6} minW="60vw" minH="30vh" justifyContent="flex-start" bg="gray.200">
-            <FormControl id="proposal" justifyContent="center" alignItems="center" >
-              <FormLabel justifyContent="center" alignItems="center" >Add a new voters</FormLabel>
-              <Textarea
-                type="textarea"
+            step === 0 ? (
+              <Stack as="form" p={6} minW="60vw" minH="30vh" justifyContent="flex-start" bg="gray.200">
+                <Flex direction="column"  alignItems="flex-end" >
+              <FormControl id="proposal" justifyContent="center" alignItems="center" >
+                <FormLabel justifyContent="center" alignItems="center" >Add a new voters</FormLabel>
+                <Textarea
+                  type="textarea"
+                  rounded="md"
+                  bg="white"
+                  placeholder="Address of the new voter"
+                  onChange={(e) => setInput(e.target.value)}
+                />
+              </FormControl>
+              <Button  leftIcon={<MdAdd />} spinner={<BeatLoader size={8} color='white' />} bgGradient="linear(to-l, #00635D, #4FD1C5)" _hover={{bgGradient: "linear(to-r, green.400, green.800)",}}
+                color="white"
+                variant="solid"
+                size="md"
                 rounded="md"
-                bg="white"
-                placeholder="Address of the new voter"
-                onChange={(e) => setInput(e.target.value)}
-              />
-            </FormControl>
-            <Button leftIcon={<MdAdd />} spinner={<BeatLoader size={8} color='white' />} bgGradient="linear(to-l, #00635D, #4FD1C5)" _hover={{bgGradient: "linear(to-r, green.400, green.800)",}}
-              color="white"
-              variant="solid"
-              size="md"
-              rounded="md"
-              w={{base:"50%",xl:"20%"}}
-              onClick={() => addVoter(input)}
-            >
-              Add this voter
-            </Button>
-        </Stack>
+                w={{base:"50%",xl:"20%"}}
+                mt={4}
+                px="20px"
+                onClick={() => addVoter(input)}
+              >
+                <Show above='md'>
+                <Text fontSize="md" fontWeight="medium"> Add this voter</Text>
+                </Show>
+              </Button>
+              </Flex>
+              </Stack>
+            ) : (
+              <SuccessHeadline title={"All Voters have been added"} description={"Voter registration is finished"}/>
+            )
         ) : (
-          <Text> Only Owner can add voter</Text>
+          <Stack as="form" p={6} minW="60vw" minH="30vh" justifyContent="flex-start" bg="gray.200">
+              <WarningHeadline title={"You're not the owner"} description={"Only owner can see this section and add a new voter"}/>
+          </Stack>
         )}
-        {Voter ? (
-            <Stack as="form" p={6} minW="60vw" minH="30vh" justifyContent="flex-start" bg="gray.200">
-            <FormControl id="proposal" justifyContent="center" alignItems="center" >
-              <FormLabel justifyContent="center" alignItems="center" >Add a new proposal</FormLabel>
-              <Textarea
-                type="textarea"
-                rounded="md"
-                bg="white"
-                placeholder="Describe here the proposal you want to add"
-                onChange={(e) => setInput(e.target.value)}
-              />
-            </FormControl>
-            <Button leftIcon={<MdAdd />} bgGradient="linear(to-l, #00635D, #4FD1C5)" _hover={{bgGradient: "linear(to-r, green.400, green.800)",}}
-              color="white"
-              variant="solid"
-              size="md"
-              rounded="md"
-              w={{base:"50%",xl:"20%"}}
-              onClick={() => addProposal(input)}
-            >
-              Send this proposal
-            </Button>
-            </Stack>
-          ) : (
-            <Text color="red"> You are not a voter</Text>
-            )}
-
-
-
-        {events.length !== 0 ? (
-        <Stack direction={['column', 'row']} minW="60vw" minH="60vh" justifyContent="center" alignItems="center" bg="white" rounded="md">
-          <Box fontSize="xs" bg="white" justifyContent="center" alignItems="center" >
-            <Table colorScheme='teal' minW="50vw" minH="50vh">
-              <Thead>
-                <Tr>
-                  <Th>Proposal ID</Th>
-                  <Th>Description</Th>
-                  <Th >Action</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-              {events.map(({id,description}) => {
-                return (
-                <Tr key={id}>
-                  <Td>{id}</Td>
-                  <Td>{description}</Td>
-                  <Td>
-                      <Button p="10px" bg={color} onClick={() => setVote(id)} >
-                        <Flex cursor="pointer" align="center">
-                          <Text color="white" fontSize="xs">
-                            VOTE
-                          </Text>
-                        </Flex>
-                      </Button>
-                  </Td>
-                </Tr>
-                )})}
-              </Tbody>
-            </Table>
-          </Box>
-        </Stack>) : (
-          <Text> No proposals yet</Text>
+        <StackDivider borderColor="gray.800" />
+        {isVoter ? 
+              (
+                    <Stack as="form" p={6} minW="60vw" minH="30vh" justifyContent="flex-start" bg="gray.200">
+                      {step === 1 ? (
+                        <Flex direction="column"  alignItems="flex-end" >
+                          <FormControl id="proposal" justifyContent="center" alignItems="center" alignContent="space-between" >
+                          <FormLabel justifyContent="center" alignItems="center" >Add a new proposal</FormLabel>
+                          <Textarea
+                            type="textarea"
+                            rounded="md"
+                            bg="white"
+                            placeholder="Describe here the proposal you want to add"
+                            onChange={(e) => setInput(e.target.value)}
+                          />
+                        </FormControl>
+                        <Button leftIcon={<MdAdd />} bgGradient="linear(to-l, #00635D, #4FD1C5)" _hover={{bgGradient: "linear(to-r, green.400, green.800)",}}
+                          color="white"
+                          variant="solid"
+                          size="md"
+                          rounded="md"
+                          w={{base:"50%",xl:"20%"}}
+                          mt={4}
+                          px="20px"
+                          onClick={() => addProposal(input)}
+                        >
+                        <Show above='md'>
+                        <Text fontSize="md" fontWeight="medium">  Send this proposal</Text>
+                        </Show>
+                        </Button>
+                        </Flex>       
+                      ) : (
+                        step > 1 ? (
+                          <SuccessHeadline title={"Proposal session is completed!"} description={"Proposition session is now close. Owner will open voting session soon"}/>
+                        ) : (
+                          <SuccessHeadline title={"You're now a voter!"} description={"Please wait, the owner will open the proposal session soon"}/>
+                        )
+                      )}
+                    </Stack>
+                ) : (
+                  <Stack as="form" p={6} minW="60vw" minH="30vh" justifyContent="flex-start" bg="gray.200">
+                    {address === owner ? (
+                      <ErrorHeadline title={"You're not a current voter"} description={"As a owner, you can add yourself as voter"}/>
+                    ) : (
+                      <ErrorHeadline title={"You're not a current voter"} description={"Please wait the owner, only owner can add as a new voter"}/>
+                    )}
+                  </Stack>
         )}
+        {
+          step <= 3 ?  (
+            events.length !== 0 ? (
+            <Stack direction={['column', 'row']} minW="60vw" minH="60vh" justifyContent="center" alignItems="center" bg="white" rounded="md">
+              <Box fontSize="xs" bg="white" justifyContent="center" alignItems="center" >
+                <Table colorScheme='teal' minW="50vw" minH="50vh">
+                  <Thead>
+                    <Tr>
+                      <Th>Proposal ID</Th>
+                      <Th>Description</Th>
+                      <Th >Action</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                  {events.map(({id,description}) => {
+                    return (
+                    <Tr key={id}>
+                      <Td>{id}</Td>
+                      <Td>{description}</Td>
+                      <Td>
+                          <Button p="10px" bg={color} onClick={() => setVote(id)} >
+                            <Flex cursor="pointer" align="center">
+                              <Text color="white" fontSize="xs">
+                                VOTE
+                              </Text>
+                            </Flex>
+                          </Button>
+                      </Td>
+                    </Tr>
+                    )})}
+                  </Tbody>
+                </Table>
+              </Box>
+            </Stack>) : (
+            <InfoHeadline title={"No proposals yet"} description={"Please wait to reach the proposal session workflow status to add you're first proposal"}/>
+          )) : (
+            <SuccessHeadline title={"Voting session is completed!"} description={"Voting session is now close. Owner will tally the vote soon"}/>
+          )
+      } 
       </Flex>
+       )} 
     </Flex>  
   )
 }
@@ -783,80 +883,7 @@ catch (e){
 export default Proposals;
 
 
-           {/* {(() => {
-            switch (step) {
-              case 0:
-                return (
-                  <Flex direction="column">            
-                  <Text>Proposals registering is not started yet.</Text>
-                    <Button
-                    ml="1rem"
-                    px={8}
-                    size="md"
-                    onClick={() => startProposalsRegistering()}>
-                      startProposalsRegistering
-                  </Button>
-                </Flex> 
-                )
-              case 1:
-                return ( 
-                      <Flex direction="column">            
-                        <Text>Proposals registering is started.</Text>
-                        <Button   
-                          ml="1rem"
-                          px={8}
-                          size="md"
-                          onClick={() => endProposalsRegistering()}>endProposalsRegistering
-                        </Button>
-                      </Flex>
-                  )
-              case 2:
-                return (
-                    <Flex direction="column">            
-                      <Text>Proposals registering is ended.</Text>
-                      <Button   
-                        ml="1rem"
-                        px={8}
-                        size="md"
-                        onClick={() => startVotingSession()}>startVotingSession
-                      </Button>
-                  </Flex>
-
-                )
-              case 3:
-                return (                  
-                  <Flex direction="column">            
-                    <Text>Voting session is started.</Text>
-                    <Button   
-                      ml="1rem"
-                      px={8}
-                      size="md"
-                      onClick={() => endVotingSession()}>endVotingSession
-                    </Button>
-                  </Flex>
-                  )
-                case 4:
-                  return (
-                    <Flex direction="column">            
-                      <Text>Voting session is ended.</Text>
-                      <Button   
-                          ml="1rem"
-                          px={8}
-                          size="md"
-                          onClick={() => tallyVotes()}>tallyVotes
-                    </Button>
-                  </Flex>)
-                case 5:
-                  return (                  
-                    <Flex direction="column">            
-                    <Text>Something went wrong.</Text></Flex>
-                    );
-              default:
-                return null
-            }
-             })()} */}
-
-      //        <MainPanel bg="teal.300" rounded="md" w={{base: "90%",}} p={{base:"5px", xl:"40px"}} justifyContent="center" alignItems="center">
+      // <MainPanel bg="teal.300" rounded="md" w={{base: "90%",}} p={{base:"5px", xl:"40px"}} justifyContent="center" alignItems="center">
       //        <Box h='40px' bg="teal.300">
       //        <Text
       //        fontSize="xs" colorScheme={progression === 100 ? "teal" : "cyan"} pt=".2rem">
