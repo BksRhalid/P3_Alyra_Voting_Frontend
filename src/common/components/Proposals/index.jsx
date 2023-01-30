@@ -836,7 +836,7 @@ catch (e){
                   </Stack>
         )}
         {
-          step <= 3 ?  (
+          step < 4 ?  (
             events.length !== 0 ? (
             <Stack direction={['column', 'row']} minW="60vw" minH="60vh" justifyContent="center" alignItems="center" bg="white" rounded="md">
               <Box fontSize="xs" bg="white" justifyContent="center" alignItems="center" >
@@ -868,9 +868,11 @@ catch (e){
                   </Tbody>
                 </Table>
               </Box>
-            </Stack>) : (
+            </Stack>
+            ) : (
             <InfoHeadline title={"No proposals yet"} description={"Please wait to reach the proposal session workflow status to add you're first proposal"}/>
-          )) : (
+            )
+          ) : (
             <SuccessHeadline title={"Voting session is completed!"} description={"Voting session is now close. Owner will tally the vote soon"}/>
           )
       } 
