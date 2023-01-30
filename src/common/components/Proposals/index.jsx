@@ -146,12 +146,12 @@ const Proposals = () => {
     
     let filter = {
       address: contractAddress,
-      // fromBlock: 8373573
+      // fromBlock: 8404855
   };
 
     // let events = await contract.queryFilter(filter)
 
-    const startBlock = 0; //Block number where the contract was deployed
+    const startBlock = 8404855; //Block number where the contract was deployed
     const endBlock = latest;
     let logs = []; let proposalsEvent = [];
 
