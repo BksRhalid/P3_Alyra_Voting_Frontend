@@ -1,9 +1,10 @@
 // import Contract from "../../backend/artifacts/contracts/Gigs.sol/Gigs";
 
-// export const contractAddress = "0x5fbdb2315678afecb367f032d93f642f64180aa3";
+// hardhat contractAddress = "0x5fbdb2315678afecb367f032d93f642f64180aa3";
+// process.env.NEXT_PUBLIC_CONTRACT_ADDRESS
 
-export const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
-export const abi = [
+const contractAddress = "0x0C5CFF6467BA9Ed39Db89D25590c741b10221F1E";
+const abi = [
   {
     anonymous: false,
     inputs: [
@@ -288,3 +289,5 @@ export const abi = [
     type: "function",
   },
 ];
+
+export { abi, contractAddress };
