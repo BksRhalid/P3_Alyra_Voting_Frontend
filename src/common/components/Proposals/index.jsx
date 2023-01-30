@@ -155,14 +155,14 @@ const Proposals = () => {
     const endBlock = latest;
     let logs = []; let proposalsEvent = [];
 
-    // for(let i = startBlock; i < endBlock; i += 5000) {
-    //   // console.log("i",i)
-    //   const _startBlock = i;
-    //   const _endBlock = Math.min(endBlock, i + 4999);
-      const data = await contract.queryFilter(filter, startBlock, endBlock);
+    for(let i = startBlock; i < endBlock; i += 5000) {
+      // console.log("i",i)
+      const _startBlock = i;
+      const _endBlock = Math.min(endBlock, i + 4999);
+      const data = await contract.queryFilter(filter, _startBlock, _endBlock);
       // console.log("data", data)
       logs = [...logs, ...data]
-    // }
+    }
 
     //For each event, we put it in the right array
     logs.forEach(event => {
@@ -768,7 +768,7 @@ catch (e){
                 variant="solid"
                 size="md"
                 rounded="md"
-                w={{base:"50%",xl:"20%"}}
+                w={{base:"50%",xl:"30%"}}
                 mt={4}
                 px="20px"
                 onClick={() => addVoter(input)}
@@ -808,7 +808,7 @@ catch (e){
                           variant="solid"
                           size="md"
                           rounded="md"
-                          w={{base:"50%",xl:"20%"}}
+                          w={{base:"50%",xl:"30%"}}
                           mt={4}
                           px="20px"
                           onClick={() => addProposal(input)}
