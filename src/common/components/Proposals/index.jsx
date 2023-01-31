@@ -48,10 +48,10 @@ const Proposals = () => {
     },
   });
 
-  // useEffect(() => {
-  //   getDatas()
-  //   console.log("owner address is :", owner)
-  // }, [])
+  useEffect(() => {
+    getDatas()
+    console.log("owner address is :", owner)
+  }, [])
 
 
   // useEffect(() => {
@@ -185,8 +185,7 @@ const Proposals = () => {
     getDatas()
     getVoter()
     registerProposal()
-    console.log("owner address is :", owner)
-  }, [isConnected, address, isVoter, step])
+  }, [isConnected, address])
 
   const startProposalsRegistering = async() => {
     try {
