@@ -304,7 +304,7 @@ catch (e){
     catch (e){
       console.log("startVotingSession error message", e.message)
       console.log("startVotingSession error reason", e.reason)
-      const data = e.reason.split("'")
+      const data = e.reason.split(":")
       if (data[1] === "Registering proposals phase is not finished") {
           toast({
             title: 'Error',
@@ -354,7 +354,7 @@ catch (e){
     catch (e){
       console.log("endVotingSession error message", e.message)
       console.log("endVotingSession error reason", e.reason)
-        const data = e.reason.split("'")
+        const data = e.reason.split(":")
       if (data[1] === "Registering proposals phase is not finished") {
           toast({
             title: 'Error',
@@ -406,7 +406,7 @@ catch (e){
       console.log("tallyVotes error message", e.message)
       console.log("tallyVotes error reason", e.reason)
       try {
-        const data = e.reason.split("'")
+        const data = e.reason.split(":")
         if (data[1] === "Current status is not voting session ended") {
             toast({
               title: 'Error',
@@ -460,7 +460,7 @@ catch (e){
       console.log("Aie l'erreur :", error)
       toast({
         title: 'Error',
-        description: "An error occured, please try again.",
+        description: "Too early to get the winner proposal",
         status: 'error',
         duration: 5000,
         isClosable: true,
