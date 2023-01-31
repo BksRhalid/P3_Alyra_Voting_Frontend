@@ -52,14 +52,14 @@ const Proposals = () => {
       try {
       const contract = new ethers.Contract(contractAddress, abi, provider)
       contract.on('WorkflowStatusChange', (from, to, event) => {
-        // toast({
-        //   title: `${event.event}`,
-        //   description: `Status change from ${from} to ${to}`,
-        //   status: 'success',
-        //   duration: 2000,
-        //   isClosable: true,
-        // })
-        setStep(to)
+        toast({
+          title: `${event.event}`,
+          description: `Status change from ${from} to ${to}`,
+          status: 'success',
+          duration: 2000,
+          isClosable: true,
+        })
+        // setStep(to)
       })
       return () => {
         contract.removeAllListeners();
@@ -74,12 +74,8 @@ const Proposals = () => {
         isClosable: true,
       })
     }  
-  }, [])
+  }, [step])
 
-  useEffect(() => {
-    registerProposal()
-    // console.log("registerProposal : ", events)
-  }, [])
 
   const updateStatus = (expr) => {
     switch (expr) {
@@ -124,21 +120,6 @@ const Proposals = () => {
     }
   }
 
-  // let proposals = []
-
-  // const getProposals = async() => {
-  //   const contract = new ethers.Contract(contractAddress, abi, provider)
-  //   for (let i = 1; i <= proposalsLength; i++) {
-  //     let proposal = await contract.getOneProposal(i)
-  //     let proposalId = i
-  //     // let proposalDescription = proposal.description
-  //     proposals = [...proposals, proposalId]
-  //     // proposals.push({proposalId, proposalDescription})
-  //   }
-  //   setProposalsTab(proposals)
-  //   // console.log("Proposals Tab is :", proposalsTab)
-  // }
-
   const registerProposal = async() => { 
     
     const contract = new ethers.Contract(contractAddress, abi, provider)
@@ -146,17 +127,15 @@ const Proposals = () => {
     
     let filter = {
       address: contractAddress,
-      // fromBlock: 8404855
-  };
+    };  
 
     // let events = await contract.queryFilter(filter)
 
-    const startBlock = 8404855; //Block number where the contract was deployed
+    const startBlock = 8409348; //Block number where the contract was deployed
     const endBlock = latest;
     let logs = []; let proposalsEvent = [];
 
     for(let i = startBlock; i < endBlock; i += 5000) {
-      // console.log("i",i)
       const _startBlock = i;
       const _endBlock = Math.min(endBlock, i + 4999);
       const data = await contract.queryFilter(filter, _startBlock, _endBlock);
@@ -164,7 +143,6 @@ const Proposals = () => {
       logs = [...logs, ...data]
     }
 
-    //For each event, we put it in the right array
     logs.forEach(event => {
       if(event.event === "ProposalRegistered") {
         proposalsEvent.push(event.args.proposalId)
@@ -190,13 +168,13 @@ const Proposals = () => {
     let step = await contract.workflowStatus()
     setStep(step)
     updateStatus(step)
-    // registerProposal()
 }
 
   useEffect(() => {
     getDatas()
     getVoter()
-  }, [isConnected, address, isVoter, step])
+    registerProposal()
+  }, [isConnected, address, isVoter, step, events])
 
   const startProposalsRegistering = async() => {
     try {
@@ -550,6 +528,7 @@ catch (e){
         }
         catch (e) {
           console.log(e)
+          console.log(e.reason)
           toast({
             title: 'Error',
             description: "An error occured, please try again.",
@@ -617,6 +596,7 @@ catch (e){
       }
       }
       catch (e) {
+        console.log(e.reason)
         {
           toast({
             title: 'Error',
