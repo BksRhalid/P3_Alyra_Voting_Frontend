@@ -140,6 +140,8 @@ const Proposals = () => {
     const startBlock = 8409348; //Block number where the contract was deployed
     const endBlock = latest;
     let logs = []; let proposalsEvent = [];
+    console.log("startBlock", startBlock)
+    console.log("endBlock", endBlock)
 
     for(let i = startBlock; i < endBlock; i += 5000) {
       const _startBlock = i;
