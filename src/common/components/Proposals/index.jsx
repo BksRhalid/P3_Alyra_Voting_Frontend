@@ -165,11 +165,11 @@ const Proposals = () => {
         description: description.description,
       }
       proposalsTab.push(thisEvent)
-      console.log("this Event", thisEvent)
+      // console.log("this Event", thisEvent)
 
     }
     setEvents(proposalsTab)
-    console.log("events", events)
+    // console.log("events", events)
   }
 
   const getDatas = async() => {
@@ -185,7 +185,7 @@ const Proposals = () => {
     getDatas()
     getVoter()
     registerProposal()
-  }, [isConnected, address, isVoter, step, events])
+  }, [isConnected, address, isVoter, step])
 
   const startProposalsRegistering = async() => {
     try {
@@ -503,6 +503,7 @@ catch (e){
   }
 
   const addVoter = async() => {
+    isLoading(true)
     try {
         const contract = new ethers.Contract(contractAddress, abi, signer)
         let transaction = await contract.addVoter(input)
@@ -551,7 +552,7 @@ catch (e){
         }
         }
         catch (e) {
-          console.log(e)
+          console.log("Issue Add Voter", e)
           console.log(e.reason)
           toast({
             title: 'Error',
@@ -561,7 +562,9 @@ catch (e){
             isClosable: true,
           })
   }
-}}
+}
+isLoading(false)
+}
 
   const addProposal = async() => {
     try {
