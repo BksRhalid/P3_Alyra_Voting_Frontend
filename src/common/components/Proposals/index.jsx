@@ -49,6 +49,12 @@ const Proposals = () => {
   });
 
   useEffect(() => {
+    getDatas()
+    console.log("owner address is :", owner)
+  }, [])
+
+
+  useEffect(() => {
       try {
       const contract = new ethers.Contract(contractAddress, abi, provider)
       contract.on('WorkflowStatusChange', (from, to, event) => {
