@@ -48,39 +48,39 @@ const Proposals = () => {
     },
   });
 
-  useEffect(() => {
-    getDatas()
-    console.log("owner address is :", owner)
-  }, [])
+  // useEffect(() => {
+  //   getDatas()
+  //   console.log("owner address is :", owner)
+  // }, [])
 
 
-  useEffect(() => {
-      try {
-      const contract = new ethers.Contract(contractAddress, abi, provider)
-      contract.on('WorkflowStatusChange', (from, to, event) => {
-        toast({
-          title: `${event.event}`,
-          description: `Status change from ${from} to ${to}`,
-          status: 'success',
-          duration: 2000,
-          isClosable: true,
-        })
-        // setStep(to)
-      })
-      return () => {
-        contract.removeAllListeners();
-      };
-    }
-    catch (e){
-      toast({
-        title: 'Error',
-        description: e.message , //An error occured, please try again.
-        status: 'error',
-        duration: 2000,
-        isClosable: true,
-      })
-    }  
-  }, [step])
+  // useEffect(() => {
+  //     try {
+  //     const contract = new ethers.Contract(contractAddress, abi, provider)
+  //     contract.on('WorkflowStatusChange', (from, to, event) => {
+  //       toast({
+  //         title: `${event.event}`,
+  //         description: `Status change from ${from} to ${to}`,
+  //         status: 'success',
+  //         duration: 2000,
+  //         isClosable: true,
+  //       })
+  //       // setStep(to)
+  //     })
+  //     return () => {
+  //       contract.removeAllListeners();
+  //     };
+  //   }
+  //   catch (e){
+  //     toast({
+  //       title: 'Error',
+  //       description: e.message , //An error occured, please try again.
+  //       status: 'error',
+  //       duration: 2000,
+  //       isClosable: true,
+  //     })
+  //   }  
+  // }, [step])
 
 
   const updateStatus = (expr) => {
