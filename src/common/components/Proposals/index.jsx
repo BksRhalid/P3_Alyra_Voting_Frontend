@@ -174,6 +174,7 @@ const Proposals = () => {
 
   const getDatas = async() => {
     const contract = new ethers.Contract(contractAddress, abi, provider) 
+    console.log("contract address", contractAddress)
     let owner = await contract.owner()
     setOwner(owner)
     let step = await contract.workflowStatus()
