@@ -202,9 +202,10 @@ const Proposals = () => {
         })
       }
 catch (e){ 
-  const data = e.reason.split("'")
+  const data = e.reason.split(":")
   console.log("startProposalsRegistering error message", e.message)
   console.log("startProposalsRegistering error reason", e.reason)
+  console.log("data",data)
   if (data[1] === "Registering proposals cant be started now") {
       toast({
         title: 'Error',
@@ -214,7 +215,7 @@ catch (e){
         isClosable: true,
       })
     }
-    else if (data[1] === "Ownable: caller is not the owner")
+    else if (data[1] === "Ownable")
     {
       toast({
         title: 'Error',
@@ -253,7 +254,8 @@ catch (e){
       console.log("endProposalsRegistering error message", e.message)
       console.log("endProposalsRegistering error reason", e.reason)
 
-      const data = e.reason.split("'") 
+      const data = e.reason.split(":") 
+      console.log("data",data)
       if (data[1] === "Registering proposals havent started yet") {
           toast({
             title: 'Error',
@@ -263,7 +265,7 @@ catch (e){
             isClosable: true,
           })
         }
-        else if (data[1] === " Ownable: caller is not the owner")
+        else if (data[1] === "Ownable")
         {
           toast({
             title: 'Error',
@@ -315,7 +317,7 @@ catch (e){
             isClosable: true,
           })
         }
-        else if (data[1] === " Ownable: caller is not the owner")
+        else if (data[1] === "Ownable")
         {
           toast({
             title: 'Error',
@@ -356,6 +358,7 @@ catch (e){
       console.log("endVotingSession error message", e.message)
       console.log("endVotingSession error reason", e.reason)
         const data = e.reason.split(":")
+        console.log("data", data)
       if (data[1] === "Registering proposals phase is not finished") {
           toast({
             title: 'Error',
@@ -365,7 +368,7 @@ catch (e){
             isClosable: true,
           })
         }
-        else if (data[1] === "Ownable: caller is not the owner")
+        else if (data[1] === "Ownable")
         {
           toast({
             title: 'Error',
@@ -417,7 +420,7 @@ catch (e){
               isClosable: true,
             })
           }
-          else if (data[1] === "Ownable: caller is not the owner")
+          else if (data[1] === " Ownable")
           {
             toast({
               title: 'Error',
