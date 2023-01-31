@@ -185,6 +185,7 @@ const Proposals = () => {
     getDatas()
     getVoter()
     registerProposal()
+    console.log("owner address is :", owner)
   }, [isConnected, address, isVoter, step])
 
   const startProposalsRegistering = async() => {
@@ -215,7 +216,7 @@ catch (e){
         isClosable: true,
       })
     }
-    else if (data[1] === "Ownable")
+    else if (data[1] === " Ownable")
     {
       toast({
         title: 'Error',
@@ -265,7 +266,7 @@ catch (e){
             isClosable: true,
           })
         }
-        else if (data[1] === "Ownable")
+        else if (data[1] === " Ownable")
         {
           toast({
             title: 'Error',
@@ -317,7 +318,7 @@ catch (e){
             isClosable: true,
           })
         }
-        else if (data[1] === "Ownable")
+        else if (data[1] === " Ownable")
         {
           toast({
             title: 'Error',
@@ -368,7 +369,7 @@ catch (e){
             isClosable: true,
           })
         }
-        else if (data[1] === "Ownable")
+        else if (data[1] === " Ownable")
         {
           toast({
             title: 'Error',
@@ -410,7 +411,7 @@ catch (e){
       console.log("tallyVotes error message", e.message)
       console.log("tallyVotes error reason", e.reason)
       try {
-        const data = e.reason.split(":")
+        const data = e.reason.split(":") // split the error message with the ":" separator in production but "'" in test
         if (data[1] === "Current status is not voting session ended") {
             toast({
               title: 'Error',
@@ -896,25 +897,5 @@ isLoading(false)
 }
 
 export default Proposals;
-
-
-      // <MainPanel bg="teal.300" rounded="md" w={{base: "90%",}} p={{base:"5px", xl:"40px"}} justifyContent="center" alignItems="center">
-      //        <Box h='40px' bg="teal.300">
-      //        <Text
-      //        fontSize="xs" colorScheme={progression === 100 ? "teal" : "cyan"} pt=".2rem">
-      //        {workflow}                
-      //        </Text>
-      //        </Box>
-      //        <Box bg="teal.300">
-      //       <Progress
-      //          hasStripe 
-      //          colorScheme={progression === 100 ? "teal" : "cyan"}
-      //          size="md"
-      //          value={progression}
-      //          borderRadius="15px"
-      //        />
-      //        </Box>
-      //  </MainPanel>
-
 
 

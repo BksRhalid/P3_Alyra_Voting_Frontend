@@ -36,3 +36,21 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+      // <MainPanel bg="teal.300" rounded="md" w={{base: "90%",}} p={{base:"5px", xl:"40px"}} justifyContent="center" alignItems="center">
+      //        <Box h='40px' bg="teal.300">
+      //        <Text
+      //        fontSize="xs" colorScheme={progression === 100 ? "teal" : "cyan"} pt=".2rem">
+      //        {workflow}
+      //        </Text>
+      //        </Box>
+      //        <Box bg="teal.300">
+      //       <Progress
+      //          hasStripe
+      //          colorScheme={progression === 100 ? "teal" : "cyan"}
+      //          size="md"
+      //          value={progression}
+      //          borderRadius="15px"
+      //        />
+      //        </Box>
+      //  </MainPanel>
