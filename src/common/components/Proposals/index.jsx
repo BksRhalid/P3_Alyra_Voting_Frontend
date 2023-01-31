@@ -203,6 +203,8 @@ const Proposals = () => {
       }
 catch (e){ 
   const data = e.reason.split("'")
+  console.log("startProposalsRegistering error message", e.message)
+  console.log("startProposalsRegistering error reason", e.reason)
   if (data[1] === "Registering proposals cant be started now") {
       toast({
         title: 'Error',
@@ -248,7 +250,10 @@ catch (e){
       })
     }
     catch (e){
-      const data = e.reason.split("'")
+      console.log("endProposalsRegistering error message", e.message)
+      console.log("endProposalsRegistering error reason", e.reason)
+
+      const data = e.reason.split("'") 
       if (data[1] === "Registering proposals havent started yet") {
           toast({
             title: 'Error',
@@ -297,6 +302,8 @@ catch (e){
       })
     }
     catch (e){
+      console.log("startVotingSession error message", e.message)
+      console.log("startVotingSession error reason", e.reason)
       const data = e.reason.split("'")
       if (data[1] === "Registering proposals phase is not finished") {
           toast({
@@ -345,6 +352,8 @@ catch (e){
       })
     }
     catch (e){
+      console.log("endVotingSession error message", e.message)
+      console.log("endVotingSession error reason", e.reason)
         const data = e.reason.split("'")
       if (data[1] === "Registering proposals phase is not finished") {
           toast({
@@ -394,6 +403,8 @@ catch (e){
         })
       }
     catch (e){
+      console.log("tallyVotes error message", e.message)
+      console.log("tallyVotes error reason", e.reason)
       try {
         const data = e.reason.split("'")
         if (data[1] === "Current status is not voting session ended") {
@@ -507,6 +518,8 @@ catch (e){
         })
       }
       catch (e){
+        console.log("addVoter error message", e.message)
+        console.log("addVoter error reason", e.reason)
         try {
           const data = e.reason.split("'")
           if (data[1] === "Voters registration is not open yet") {
@@ -636,6 +649,8 @@ catch (e){
       })
     }
     catch (e) {
+      console.log("setVote error message", e.message)
+      console.log("setVote error reason", e.reason)
       const data = e.reason.split("'")
       if (data[1] === "You have already voted") {
         toast({
