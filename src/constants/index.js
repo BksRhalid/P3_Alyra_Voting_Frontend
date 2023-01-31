@@ -5,7 +5,7 @@
 
 // 0x0C5CFF6467BA9Ed39Db89D25590c741b10221F1E
 
-const contractAddress = "0x0C5CFF6467BA9Ed39Db89D25590c741b10221F1E";
+const contractAddress = "0x0Ef3AdB5e5c83DEf83B975fEae52aC0523c6f5B0";
 const abi = [
   {
     anonymous: false,
