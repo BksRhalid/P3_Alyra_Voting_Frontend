@@ -159,14 +159,17 @@ const Proposals = () => {
     let proposalsTab = []
     for (let i = 0; i < proposalsEvent.length; i++) {
       let id = parseInt(proposalsEvent[i])
-      let description = await contract.getOneProposal(id)
+      let description = await contract.connect(address).getOneProposal(id)
       let thisEvent = {
         id: id,
         description: description.description,
       }
       proposalsTab.push(thisEvent)
+      console.log("this Event", thisEvent)
+
     }
     setEvents(proposalsTab)
+    console.log("events", events)
   }
 
   const getDatas = async() => {
