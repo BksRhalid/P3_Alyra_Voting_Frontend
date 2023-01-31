@@ -719,32 +719,32 @@ setIsLoading(false)
             <Text fontSize="xs" fontWeight="medium" ml={2}> Registration session</Text>  
             </Show>
           </Button> 
-          <Button isDisabled={step>0}  leftIcon={<BiMessageAltEdit size={24} />}  isLoading={isLoading} loadingText='Submitting' rounded="md" w={{base: "5vw", xl:"15vw"}} p={{base:"5px", xl:"40px"}}  onClick={() => startProposalsRegistering()} bgGradient={"linear(to-l, #00635D, #4FD1C5)"} _hover={{bgGradient: "linear(to-r, green.400, green.800)",}} justifyContent="center" alignItems="center">
+          <Button isDisabled={step>0}  leftIcon={<BiMessageAltEdit size={24} />}   rounded="md" w={{base: "5vw", xl:"15vw"}} p={{base:"5px", xl:"40px"}}  onClick={() => startProposalsRegistering()} bgGradient={"linear(to-l, #00635D, #4FD1C5)"} _hover={{bgGradient: "linear(to-r, green.400, green.800)",}} justifyContent="center" alignItems="center">
           <Show above='lg'>
             <Text fontSize="xs" fontWeight="medium" ml={2}> Start proposal session</Text>  
           </Show>
           </Button> 
-          <Button isDisabled={step>1} leftIcon={<BiMessageAltX size={24} />}  isLoading={isLoading} loadingText='Submitting'  rounded="md" w={{base: "5vw", xl:"15vw"}}  p={{base:"5px", xl:"40px"}}  onClick={() => endProposalsRegistering()} bgGradient={"linear(to-l, #00635D, #4FD1C5)"} _hover={{bgGradient: "linear(to-r, green.400, green.800)",}} justifyContent="center" alignItems="center">
+          <Button isDisabled={step>1} leftIcon={<BiMessageAltX size={24} />}   rounded="md" w={{base: "5vw", xl:"15vw"}}  p={{base:"5px", xl:"40px"}}  onClick={() => endProposalsRegistering()} bgGradient={"linear(to-l, #00635D, #4FD1C5)"} _hover={{bgGradient: "linear(to-r, green.400, green.800)",}} justifyContent="center" alignItems="center">
           <Show above='lg'>
             <Text fontSize="xs" fontWeight="medium" ml={2}> End proposal session</Text>  
           </Show>
           </Button> 
-          <Button isDisabled={step>2} leftIcon={<FaVoteYea size={24} />}  isLoading={isLoading} loadingText='Submitting'  rounded="md" w={{base: "5vw", xl:"15vw"}}  p={{base:"5px", xl:"40px"}}  onClick={() => startVotingSession()} bgGradient={"linear(to-l, #00635D, #4FD1C5)"} _hover={{bgGradient: "linear(to-r, green.400, green.800)",}} justifyContent="center" alignItems="center">
+          <Button isDisabled={step>2} leftIcon={<FaVoteYea size={24} />}  rounded="md" w={{base: "5vw", xl:"15vw"}}  p={{base:"5px", xl:"40px"}}  onClick={() => startVotingSession()} bgGradient={"linear(to-l, #00635D, #4FD1C5)"} _hover={{bgGradient: "linear(to-r, green.400, green.800)",}} justifyContent="center" alignItems="center">
           <Show above='lg'>
           <Text fontSize="xs" fontWeight="medium" ml={2}> Start Voting session </Text>  
           </Show>
           </Button> 
-          <Button isDisabled={step>3} leftIcon={<BsFillCalendarXFill  size={24} />}  isLoading={isLoading} loadingText='Submitting'  rounded="md" w={{base: "5vw", xl:"15vw"}}  p={{base:"5px", xl:"40px"}}  onClick={() => endVotingSession()} bgGradient={"linear(to-l, #00635D, #4FD1C5)"} _hover={{bgGradient: "linear(to-r, green.400, green.800)",}} justifyContent="center" alignItems="center">
+          <Button isDisabled={step>3} leftIcon={<BsFillCalendarXFill  size={24} />}   rounded="md" w={{base: "5vw", xl:"15vw"}}  p={{base:"5px", xl:"40px"}}  onClick={() => endVotingSession()} bgGradient={"linear(to-l, #00635D, #4FD1C5)"} _hover={{bgGradient: "linear(to-r, green.400, green.800)",}} justifyContent="center" alignItems="center">
           <Show above='lg'>
             <Text fontSize="xs" fontWeight="medium" ml={2}> End Voting session </Text>  
           </Show>
           </Button> 
-          <Button isDisabled={step>4} leftIcon={<AiOutlineCalculator size={24} />} isLoading={isLoading} loadingText='Submitting'  rounded="md" w={{base: "5vw", xl:"15vw"}} p={{base:"5px", xl:"40px"}}  onClick={() => tallyVotes()} bgGradient={"linear(to-l, #00635D, #4FD1C5)"} _hover={{bgGradient: "linear(to-r, green.400, green.800)",}} justifyContent="center" alignItems="center">
+          <Button isDisabled={step>4} leftIcon={<AiOutlineCalculator size={24} />} rounded="md" w={{base: "5vw", xl:"15vw"}} p={{base:"5px", xl:"40px"}}  onClick={() => tallyVotes()} bgGradient={"linear(to-l, #00635D, #4FD1C5)"} _hover={{bgGradient: "linear(to-r, green.400, green.800)",}} justifyContent="center" alignItems="center">
           <Show above='lg'>
             <Text fontSize="xs" fontWeight="medium" ml={2}> Tally the vote </Text>  
           </Show>
           </Button> 
-          <Button isDisabled={winnerPropal !== ""} leftIcon={<AiFillTrophy size={24} />}  isLoading={isLoading} loadingText='Submitting'  rounded="md" w={{base: "5vw", xl:"15vw"}}  p={{base:"5px", xl:"40px"}}  onClick={() => getProposalWinner()} bgGradient={"linear(to-l, #00635D, #4FD1C5)"} _hover={{bgGradient: "linear(to-r, green.400, green.800)",}} justifyContent="center" alignItems="center">
+          <Button isDisabled={winnerPropal !== ""} leftIcon={<AiFillTrophy size={24} />}  rounded="md" w={{base: "5vw", xl:"15vw"}}  p={{base:"5px", xl:"40px"}}  onClick={() => getProposalWinner()} bgGradient={"linear(to-l, #00635D, #4FD1C5)"} _hover={{bgGradient: "linear(to-r, green.400, green.800)",}} justifyContent="center" alignItems="center">
             <Show above='lg'>
                 <Text fontSize="xs" fontWeight="medium" ml={2}> Reveal wining proposal </Text>  
             </Show>
@@ -782,6 +782,7 @@ setIsLoading(false)
                 mt={4}
                 px="20px"
                 onClick={() => addVoter(input)}
+                isLoading={isLoading} loadingText='Submitting'
               >
                 <Show above='md'>
                 <Text fontSize="md" fontWeight="medium"> Add this voter</Text>
@@ -822,6 +823,7 @@ setIsLoading(false)
                           mt={4}
                           px="20px"
                           onClick={() => addProposal(input)}
+                          isLoading={isLoading} loadingText='Submitting'
                         >
                         <Show above='md'>
                         <Text fontSize="md" fontWeight="medium">  Send this proposal</Text>
