@@ -305,6 +305,7 @@ catch (e){
       console.log("startVotingSession error message", e.message)
       console.log("startVotingSession error reason", e.reason)
       const data = e.reason.split(":")
+      console.log("data", data)
       if (data[1] === "Registering proposals phase is not finished") {
           toast({
             title: 'Error',
