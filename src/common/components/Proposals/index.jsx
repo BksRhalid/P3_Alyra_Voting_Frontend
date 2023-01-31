@@ -24,7 +24,7 @@ const Proposals = () => {
   const { data: signer } = useSigner();
 
   const [step, setStep] = useState([])
-  const [owner, setOwner] = useState([])
+  const [owner, setOwner] = useState("")
   const [progression, setProgression] = useState(0)
   const [workflow, setWorkflow] = useState("")
   const [proposalsLength, setProposalsLength] = useState(0);
@@ -47,12 +47,6 @@ const Proposals = () => {
       maxWidth: "80%",
     },
   });
-
-  useEffect(() => {
-    getDatas()
-    console.log("owner address is :", owner)
-  }, [])
-
 
   // useEffect(() => {
   //     try {
@@ -175,8 +169,10 @@ const Proposals = () => {
   const getDatas = async() => {
     const contract = new ethers.Contract(contractAddress, abi, provider) 
     console.log("contract address", contractAddress)
-    let owner = await contract.owner()
-    setOwner(owner)
+    // console.log("contract.owner ?",await contract.owner())
+    const thisOwner = await contract.owner()
+    setOwner(thisOwner)
+    // console.log("this owner ?", thisOwner, owner)
     let step = await contract.workflowStatus()
     setStep(step)
     updateStatus(step)
