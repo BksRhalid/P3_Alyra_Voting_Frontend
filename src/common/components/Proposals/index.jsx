@@ -263,7 +263,7 @@ catch (e){
             isClosable: true,
           })
         }
-        else if (data[1] === "Ownable: caller is not the owner")
+        else if (data[1] === " Ownable: caller is not the owner")
         {
           toast({
             title: 'Error',
@@ -314,7 +314,7 @@ catch (e){
             isClosable: true,
           })
         }
-        else if (data[1] === "Ownable: caller is not the owner")
+        else if (data[1] === " Ownable: caller is not the owner")
         {
           toast({
             title: 'Error',
