@@ -452,7 +452,7 @@ catch (e){
   const getProposalWinner = async() => {
     try {
       const contract = new ethers.Contract(contractAddress, abi, provider)
-      let winner = await contract.winningProposalID()
+      let winner = await contract.connect(address).winningProposalID()
       let winnerID = winner.toNumber()
       let winnerProposal = await contract.getOneProposal(winnerID)
       setWinnerPropal(winnerProposal.description)
