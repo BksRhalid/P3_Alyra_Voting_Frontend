@@ -504,7 +504,7 @@ catch (e){
   }
 
   const addVoter = async() => {
-    isLoading(true)
+    setIsLoading(true)
     try {
         const contract = new ethers.Contract(contractAddress, abi, signer)
         let transaction = await contract.addVoter(input)
@@ -564,7 +564,7 @@ catch (e){
           })
   }
 }
-isLoading(false)
+setIsLoading(false)
 }
 
   const addProposal = async() => {
